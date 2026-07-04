@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Temperature Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.5/dist/socket.io.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: #0f172a; color: #f8fafc; padding: 40px 20px; display: flex; justify-content: center; min-height: 100vh; }
+        .container { width: 100%; max-width: 900px; }
+        header { text-align: center; margin-bottom: 30px; }
+        header h1 { font-size: 1.8rem; font-weight: 700; color: #38bdf8; letter-spacing: -0.5px; }
+        header p { color: #64748b; font-size: 0.95rem; margin-top: 5px; }
+        .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 25px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3); margin-bottom: 25px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .suhu-title { font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; }
+        .suhu-box { font-size: 5rem; font-weight: 700; color: #f43f5e; margin: 10px 0; line-height: 1; display: flex; align-items: flex-start; }
+        .suhu-unit { font-size: 2rem; color: #64748b; margin-top: 10px; margin-left: 5px; }
+        .badge { padding: 6px 16px; border-radius: 99px; font-size: 0.85rem; font-weight: 600; background: #334155; color: #94a3b8; }
+        .badge.normal { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .badge.demam { background: rgba(244, 63, 94, 0.15); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.3); }
+        .chart-card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 25px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3); height: 400px; position: relative; }
+        .chart-header { font-size: 1rem; font-weight: 600; color: #f8fafc; margin-bottom: 20px; text-align: left; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>DASHBOARD MONITORING SUHU TUBUH</h1>
+            <p>Sistem Kontrol & Monitoring Real-time Berbasis IoT</p>
+        </header>
+
+        <div class="card">
+            <div class="suhu-title">Suhu Tubuh Terkini (Observasi)</div>
+            <div class="suhu-box">
+                <span id="suhu-sekarang">--</span>
+                <span class="suhu-unit">°C</span>
+            </div>
+            <div id="status-badge" class="badge">Menunggu Data ...</div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-header">Grafik Riwayat Perkembangan Suhu </div>
+            <div style="width: 100%; height: calc(100% - 40px);">
+                <canvas id="grafikSuhu"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const socket = io();
+        const ctx = document.getElementById('grafikSuhu').getContext('2d');
+        const dataSuhu = [];
+        const labelWaktu = [];
+        
+        const chartSuhu = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labelWaktu,
+                datasets: [{
+                    label: 'Suhu (°C)',
+                    data: dataSuhu,
+                    borderColor: '#38bdf8',
+                    borderWidth: 3,
+                    backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#38bdf8',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { min: 30, max: 45, grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
+                    x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+                }
+            }
+        });
+
+        // Fungsi menangkap data kiriman dari backend
+        function updateWeb(inputData) {
+            let nilaiSuhu = 0;
+            let nilaiWaktu = new Date().toLocaleTimeString('id-ID');
+
+            if (typeof inputData === 'object' && inputData !== null) {
+                nilaiSuhu = parseFloat(inputData.suhu || inputData.temperature || 0);
+                if (inputData.waktu) nilaiWaktu = inputData.waktu;
+            } else {
+                nilaiSuhu = parseFloat(inputData);
+            }
+
+            if (isNaN(nilaiSuhu)) return;
+
+            // Update Teks Angka & Status Badge
+            document.getElementById('suhu-sekarang').innerText = nilaiSuhu.toFixed(1);
+            const badge = document.getElementById('status-badge');
+            if (nilaiSuhu >= 37.5) {
+                badge.innerText = "STATUS PASIEN: DEMAM / TINGGI";
+                badge.className = "badge demam";
+            } else {
+                badge.innerText = "STATUS PASIEN: NORMAL";
+                badge.className = "badge normal";
+            }
+
+            // Batasi data di grafik maksimal 10 baris terakhir agar tidak menumpuk
+            if (dataSuhu.length >= 10) {
+                dataSuhu.shift();
+                labelWaktu.shift();
+            }
+            dataSuhu.push(nilaiSuhu);
+            labelWaktu.push(nilaiWaktu);
+            chartSuhu.update();
+        }
+
+        // Listener penangkap data dari Socket.io server
+        socket.on('dataSuhuBaru', (d) => updateWeb(d));
+    </script>
+</body>
+</html>
