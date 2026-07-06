@@ -34,3 +34,21 @@ Tujuan dari sistem ini adalah:
 7. Jalankan server dengan perintah:
    ```bash
    node server.js
+
+## 🚀 Panduan Menjalankan Project (Getting Started)
+
+Untuk menjalankan sistem ini secara lokal di komputer, pastikan Anda telah menginstal **Node.js**, **XAMPP**, dan **Arduino IDE**. Ikuti langkah-langkah berikut:
+
+### Tahap 1: Persiapan Database (MySQL)
+1. Buka **XAMPP Control Panel** dan klik **Start** pada modul **Apache** dan **MySQL**.
+2. Buka browser dan akses `http://localhost/phpmyadmin`.
+3. Buat database baru dengan nama `dashboard-suhu`.
+4. Pilih database tersebut, lalu klik tab **Import**. 
+5. Masukkan file `database_suhu.sql` yang ada di dalam *repository* ini, lalu klik **Go** untuk mengeksekusi pembuatan tabel.
+*(Catatan: Tabel log_suhu sudah dikonfigurasi menggunakan CURRENT_TIMESTAMP untuk pencatatan waktu otomatis).*
+
+### Tahap 2: Konfigurasi Server (Node.js)
+1. Buka folder *project* ini menggunakan teks editor (misalnya **Visual Studio Code**).
+2. Buka terminal baru (Ctrl + `) dan jalankan perintah berikut untuk menginstal semua *library* yang dibutuhkan:
+   ```bash
+   npm install
