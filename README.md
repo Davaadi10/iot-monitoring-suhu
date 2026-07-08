@@ -1,76 +1,163 @@
-# 🌡️ Implementasi Platform Monitoring Suhu Tubuh Berbasis IoT
+🌡️ Implementasi Platform Monitoring Suhu Tubuh Berbasis IoT
 
 Proyek Internet of Things (IoT) untuk pemantauan suhu tubuh secara otomatis menggunakan mikrokontroler ESP32, sensor suhu inframerah, dan pengiriman pesan peringatan via Telegram Bot. Proyek ini diimplementasikan dengan protokol MQTT dan penyimpanan riwayat log ke database MySQL.
 
-## 👥 Tim Pengembang
-* **Ali Razky Ramadhan** (1124160065)
-* **Dava Adi Prastya** (1124160106)
-* **Pramgalang Basokoro Kristiaji** (1124160192)
+👥 Tim Pengembang
 
-## 🎯 Latar Belakang & Tujuan
-Pengukuran suhu tubuh umumnya masih menggunakan termometer biasa, sehingga hasil pengukuran harus dicatat secara manual. Cara ini kurang efisien karena berisiko terjadi kesalahan pencatatan dan menyulitkan dalam memantau perubahan suhu[cite: 1]. 
+Ali Razky Ramadhan (1124160065)
 
-Tujuan dari sistem ini adalah:
-* Membuat alat monitoring suhu tubuh secara otomatis tanpa kontak fisik[cite: 1].
-* Menampilkan data suhu secara *real-time* pada dashboard web[cite: 1].
-* Menyimpan riwayat pengukuran secara permanen ke database[cite: 1].
-* Mengirimkan notifikasi darurat via Telegram apabila suhu tubuh melebihi batas normal[cite: 1].
+Dava Adi Prastya (1124160106)
 
-## 🛠️ Teknologi yang Digunakan
-* **Hardware:** ESP32, Sensor MLX90614[cite: 1]
-* **Protokol Jaringan:** MQTT (Broker HiveMQ)[cite: 1]
-* **Backend:** Node.js & Express.js[cite: 1]
-* **Database:** MySQL (XAMPP)[cite: 1]
-* **Notifikasi:** Telegram Bot API (HTTPS)[cite: 1]
-* **Frontend/Real-time:** HTML, CSS, Socket.io[cite: 1]
+Pramgalang Basokoro Kristiaji (1124160192)
 
-## ⚙️ Cara Menjalankan Server Lokal
-1. Pastikan **XAMPP** sudah terinstal. Jalankan modul **Apache** dan **MySQL**.
-2. Buat database baru bernama `dashboard-suhu` di phpMyAdmin.
-3. Import file `database_suhu.sql` ke dalam database tersebut (atau buat tabel `log_suhu` secara manual).
-4. Buka terminal/command prompt di direktori proyek ini.
-5. Jalankan perintah `npm install` untuk mengunduh semua *library* (mqtt, mysql2, express, socket.io, axios).
-6. Sesuaikan konfigurasi Token Bot Telegram dan Chat ID di dalam file `.env` atau `server.js`.
-7. Jalankan server dengan perintah:
-   ```bash
-   node server.js
+🎯 Latar Belakang & Tujuan
 
-## 🚀 Panduan Menjalankan Project (Getting Started)
+Pengukuran suhu tubuh umumnya masih menggunakan termometer biasa, sehingga hasil pengukuran harus dicatat secara manual. Cara ini kurang efisien karena berisiko terjadi kesalahan pencatatan dan menyulitkan dalam memantau perubahan suhu.
 
-Untuk menjalankan sistem ini secara lokal di komputer, pastikan Anda telah menginstal **Node.js**, **XAMPP**, dan **Arduino IDE**. Ikuti langkah-langkah berikut:
+Tujuan utama sistem ini adalah:
 
-### Tahap 1: Persiapan Database (MySQL)
-1. Buka **XAMPP Control Panel** dan klik **Start** pada modul **Apache** dan **MySQL**.
-2. Buka browser dan akses `http://localhost/phpmyadmin`.
-3. Buat database baru dengan nama `dashboard-suhu`.
-4. Pilih database tersebut, lalu klik tab **Import**. 
-5. Masukkan file `database_suhu.sql` yang ada di dalam *repository* ini, lalu klik **Go** untuk mengeksekusi pembuatan tabel.
-*(Catatan: Tabel log_suhu sudah dikonfigurasi menggunakan CURRENT_TIMESTAMP untuk pencatatan waktu otomatis).*
+Membuat alat monitoring suhu tubuh otomatis tanpa kontak fisik.
 
-### Tahap 2: Konfigurasi Server (Node.js)
-1. Buka folder *project* ini menggunakan teks editor (misalnya **Visual Studio Code**).
-2. Buka terminal baru (Ctrl + `) dan jalankan perintah berikut untuk menginstal semua *library* yang dibutuhkan:
-   ```bash
-   npm install
+Menampilkan data suhu secara real-time pada dashboard web.
 
-### 🤖 Pengaturan Telegram Bot (Khusus untuk Penguji/Dosen)
-Jika Bapak/Ibu ingin menguji fitur notifikasi Telegram menggunakan *source code* ini secara lokal, Bapak/Ibu perlu menggunakan Token Bot milik sendiri. Berikut langkah-langkahnya:
+Menyimpan riwayat pengukuran secara permanen ke database MySQL.
 
-1. **Dapatkan Token Bot:**
-   - Buka aplikasi Telegram, cari **@BotFather**.
-   - Ketik `/newbot`, ikuti instruksi pembuatan nama bot.
-   - Setelah selesai, BotFather akan memberikan **Token API** (contoh: `123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11`). Copy token tersebut.
+Mengirimkan notifikasi darurat via Telegram apabila terdeteksi suhu demam (>37.5°C).
 
-2. **Dapatkan Chat ID:**
-   - Di Telegram, cari bot bernama **@userinfobot** atau **@getmyid_bot**.
-   - Klik `Start`, lalu bot akan membalas dengan **ID** Anda (berupa angka, contoh: `8874826239`). Copy ID tersebut.
+🛠️ Teknologi yang Digunakan
 
-3. **Masukkan ke dalam Source Code:**
-   - Buka file `server.js` di dalam folder project.
-   - Cari baris kode berikut (biasanya di bagian atas):
-     ```javascript
-     const TELEGRAM_TOKEN = 'TOKEN_BOT_kamu_DISINI'; 
-     const CHAT_ID = 'CHAT_ID_kamu_DISINI';
-     ```
-   - Ganti tulisan `TOKEN_BOT_kamu_DISINI` dengan Token dari BotFather, dan `CHAT_ID_kamu_DISINI` dengan angka Chat ID Bapak/Ibu.
-   - Simpan (*Save*) file tersebut, dan jalankan `node server.js`. Bot Telegram siap digunakan!
+Hardware: Board ESP32, Sensor Suhu Inframerah (MLX90614)
+
+Protokol Jaringan: MQTT (Broker publik: broker.hivemq.com)
+
+Backend: Node.js & Express.js
+
+Database: MySQL (via XAMPP)
+
+Notifikasi: Telegram Bot API (HTTPS)
+
+Frontend / Real-time: HTML, CSS, Javascript, Socket.io
+
+🚀 Panduan Lengkap Menjalankan Project (Lokal / Pengujian)
+
+Panduan ini ditujukan bagi dosen/penguji yang ingin menjalankan, membedah, dan menguji coba sistem secara lokal.
+
+Prasyarat Sistem (Pastikan aplikasi berikut sudah terinstal):
+
+XAMPP (Untuk menjalankan server Apache & MySQL lokal)
+
+Node.js (Untuk menjalankan server backend)
+
+Arduino IDE (Untuk upload program ke hardware ESP32)
+
+Tahap 1: Persiapan Database (MySQL)
+
+Buka aplikasi XAMPP Control Panel.
+
+Klik tombol Start pada modul Apache dan MySQL hingga indikatornya berwarna hijau.
+
+Buka browser web (Chrome/Edge/Firefox) dan akses URL: http://localhost/phpmyadmin
+
+Di panel sebelah kiri, klik New untuk membuat database baru.
+
+Beri nama database: iot_monitoring, lalu klik tombol Create/Buat.
+
+Pilih database iot_monitoring yang baru saja dibuat.
+
+Masuk ke tab Import (di deretan menu atas).
+
+Klik Choose File, lalu cari dan pilih file database_suhu.sql yang terdapat di dalam folder project ini.
+
+Scroll ke paling bawah dan klik tombol Go/Kirim (Tunggu hingga muncul pesan notifikasi hijau bahwa import berhasil).
+
+Tahap 2: Pengaturan Kredensial Telegram Bot
+
+Untuk menjaga privasi dan keamanan sistem, kami telah mengosongkan Token API Bot milik kami. Agar fitur peringatan otomatis ke Telegram dapat diuji coba, silakan gunakan bot penguji:
+
+Buka aplikasi Telegram, cari bot @BotFather, ketik /newbot dan ikuti instruksi hingga Anda mendapatkan Token API (Contoh: 12345:ABCdef...).
+
+Cari bot @userinfobot, klik /start untuk melihat angka Chat ID Anda.
+
+Buka file server.js menggunakan code editor (seperti Visual Studio Code atau Notepad++).
+
+Pada bagian atas kode, temukan dan lengkapi variabel berikut dengan data Anda:
+
+const TELEGRAM_TOKEN = 'MASUKKAN_TOKEN_BOTFATHER_DI_SINI'; 
+const CHAT_ID = 'MASUKKAN_CHAT_ID_DI_SINI';
+
+
+Simpan (Ctrl + S) file tersebut.
+
+Tahap 3: Instalasi & Menjalankan Server Node.js
+
+(Catatan: Folder node_modules sengaja tidak kami sertakan dalam file .zip untuk memperkecil ukuran).
+
+Buka folder utama project ini menggunakan Visual Studio Code.
+
+Buka terminal terintegrasi (Pilih menu Terminal -> New Terminal atau tekan `Ctrl + ``).
+
+Ketik perintah berikut untuk mengunduh semua library pendukung secara otomatis, lalu tekan Enter:
+
+npm install
+
+
+Tunggu beberapa detik hingga instalasi selesai. Setelah itu, jalankan server dengan perintah:
+
+node server.js
+
+
+Jika berhasil, terminal akan menampilkan konfirmasi berurutan:
+
+✅ Server berjalan di http://localhost:3000
+
+✅ Terhubung ke database MySQL.
+
+✅ Terhubung ke MQTT Broker.
+
+✅ Sukses subscribe ke topik: iot/suhu
+
+Tahap 4: Konfigurasi Hardware (ESP32)
+
+Buka file berekstensi .ino (contoh: sketch_apr27a.ino) menggunakan Arduino IDE.
+
+Penting: Pastikan Anda telah menginstal library berikut di Arduino IDE (Sketch -> Include Library -> Manage Libraries):
+
+Adafruit MLX90614 Library
+
+PubSubClient (oleh Nick O'Leary)
+
+Pada baris awal program, ubah kredensial WiFi agar ESP32 dapat terhubung ke hotspot atau WiFi yang Anda gunakan saat ini:
+
+const char* ssid = "NAMA_WIFI_ATAU_HOTSPOT_ANDA";
+const char* password = "PASSWORD_WIFI_ANDA";
+
+
+Hubungkan board ESP32 ke komputer menggunakan kabel USB tipe Micro.
+
+Pastikan konfigurasi Board (DOIT ESP32 DEVKIT V1) dan Port COM sudah benar di menu Tools.
+
+Klik tombol Upload (Tanda panah ke kanan) dan tunggu hingga proses kompilasi mencapai 100%.
+
+Tahap 5: Pengujian Akhir & Simulasi Monitoring
+
+Buka browser web dan akses URL dashboard utama: http://localhost:3000
+
+Arahkan sensor MLX90614 (pada rangkaian ESP32) ke arah dahi Anda atau sumber panas lain (misal: secangkir air hangat).
+
+Validasi Dashboard: Perhatikan angka suhu pada layar dashboard, data akan diperbarui secara real-time tanpa perlu me-refresh halaman web.
+
+Validasi Database: Cek tabel log_suhu di phpMyAdmin, data terbaru beserta keterangan waktu otomatis (timestamp) akan tersimpan di sana.
+
+Validasi Sistem Darurat: Jika pembacaan sensor mendeteksi suhu melebihi 37.5°C, periksa aplikasi Telegram penguji. Sistem akan seketika mengeksekusi API untuk mengirim pesan peringatan darurat.
+
+🛠️ Pemecahan Masalah (Troubleshooting) Singkat
+
+Gagal terkoneksi ke MySQL: Pastikan XAMPP dalam keadaan aktif dan database sudah diberi nama iot_monitoring.
+
+Port 3000 In Use: Jika server gagal berjalan karena port terpakai, matikan aplikasi lain yang menggunakan port tersebut atau ubah angka port 3000 di bagian paling bawah kode server.js.
+
+Sensor membaca "NAN" atau anomali (-252.8): Cek kembali pemasangan kabel jumper I2C. Pin SDA (sensor) ke GPIO21 (ESP32) dan pin SCL (sensor) ke GPIO22 (ESP32).
+
+📡 Ringkasan Alur Kerja Sistem (Data Flow)
+
+Sensor MLX90614 ➡️ ESP32 ➡️ MQTT HiveMQ (Internet) ➡️ Node.js Server ➡️ (Bercabang: Simpan ke MySQL & Kirim ke Dashboard Web via Socket.io) ➡️ (Trigger Khusus: Bot Telegram jika suhu > 37.5°C).
