@@ -52,3 +52,25 @@ Untuk menjalankan sistem ini secara lokal di komputer, pastikan Anda telah mengi
 2. Buka terminal baru (Ctrl + `) dan jalankan perintah berikut untuk menginstal semua *library* yang dibutuhkan:
    ```bash
    npm install
+
+### 🤖 Pengaturan Telegram Bot (Khusus untuk Penguji/Dosen)
+Jika Bapak/Ibu ingin menguji fitur notifikasi Telegram menggunakan *source code* ini secara lokal, Bapak/Ibu perlu menggunakan Token Bot milik sendiri. Berikut langkah-langkahnya:
+
+1. **Dapatkan Token Bot:**
+   - Buka aplikasi Telegram, cari **@BotFather**.
+   - Ketik `/newbot`, ikuti instruksi pembuatan nama bot.
+   - Setelah selesai, BotFather akan memberikan **Token API** (contoh: `123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11`). Copy token tersebut.
+
+2. **Dapatkan Chat ID:**
+   - Di Telegram, cari bot bernama **@userinfobot** atau **@getmyid_bot**.
+   - Klik `Start`, lalu bot akan membalas dengan **ID** Anda (berupa angka, contoh: `8874826239`). Copy ID tersebut.
+
+3. **Masukkan ke dalam Source Code:**
+   - Buka file `server.js` di dalam folder project.
+   - Cari baris kode berikut (biasanya di bagian atas):
+     ```javascript
+     const TELEGRAM_TOKEN = 'TOKEN_BOT_kamu_DISINI'; 
+     const CHAT_ID = 'CHAT_ID_kamu_DISINI';
+     ```
+   - Ganti tulisan `TOKEN_BOT_kamu_DISINI` dengan Token dari BotFather, dan `CHAT_ID_kamu_DISINI` dengan angka Chat ID Bapak/Ibu.
+   - Simpan (*Save*) file tersebut, dan jalankan `node server.js`. Bot Telegram siap digunakan!
