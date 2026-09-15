@@ -2,14 +2,6 @@
 
 Proyek Internet of Things (IoT) untuk pemantauan suhu tubuh secara otomatis menggunakan mikrokontroler ESP32, sensor suhu inframerah, dan pengiriman pesan peringatan via Telegram Bot. Proyek ini diimplementasikan dengan protokol MQTT dan penyimpanan riwayat log ke database MySQL.
 
-👥 Tim Pengembang
-
-Ali Razky Ramadhan (1124160065)
-
-Dava Adi Prastya (1124160106)
-
-Pramgalang Basokoro Kristiaji (1124160192)
-
 🎯 Latar Belakang & Tujuan
 
 Pengukuran suhu tubuh umumnya masih menggunakan termometer biasa, sehingga hasil pengukuran harus dicatat secara manual. Cara ini kurang efisien karena berisiko terjadi kesalahan pencatatan dan menyulitkan dalam memantau perubahan suhu.
